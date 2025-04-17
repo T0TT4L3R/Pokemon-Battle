@@ -37,5 +37,3 @@ CSS3 do zaawansowanych efektów wizualnych, animacji i układów.
 JavaScript (ES6+) – wykorzystanie klas, funkcji strzałkowych i innych nowoczesnych funkcji.
 
 # By zagrać wystarczy pobraćplik index.gtml i otworzyć w przeglądarce
-Internet:
-Gra ładuje zasoby (takie jak obrazki Pokémon) z internetu, więc wymagany jest dostęp do sieci.
