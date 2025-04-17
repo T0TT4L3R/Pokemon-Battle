@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokémon OOP Battle</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 250px;
+      background: #111;
+      padding: 15px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+      overflow-y: auto;
+      position: fixed;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+    .container {
+      margin-left: 250px;
+      background: #111;
+      border: 2px solid #444;
+      border-radius: 12px;
+      padding: 20px;
+      width: calc(100% - 250px);
+      box-shadow: 0 0 10px #333;
+      position: relative;
+    }
+    .sidebar h2 {
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-bottom: 5px;
+    }
+    .sidebar .content {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      max-height: 0;
+      overflow: hidden;
+      padding-left: 10px;
+    }
+    .sidebar h2:hover + .content {
+      display: block;
+      opacity: 1;
+      max-height: 500px;
+    }
+    .battlefield {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .pokemon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 45%;
+    }
+    .pokemon img {
+      width: 120px;
+      height: auto;
+      image-rendering: pixelated;
+      margin-bottom: 10px;
+    }
+    .nameplate {
+      background-color: #222;
+      padding: 5px 10px;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .health-bar {
+      width: 100%;
+      height: 10px;
+      background: #444;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 5px;
+    }
+    .health-fill {
+      height: 100%;
+      background: lime;
+      width: 100%;
+      transition: width 0.5s ease;
+    }
+    .log {
+      background-color: #222;
+      border: 1px solid #444;
+      padding: 15px;
+      height: 180px;
+      overflow-y: scroll;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+    .log div { margin-bottom: 5px; }
+    .buttons {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+    button {
+      background-color: #fff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      margin: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      position: relative;
+    }
+    button:hover { background-color: #ccc; }
+    button::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      color: #000;
+      padding: 5px 10px;
+      border-radius: 5px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    select {
+      background-color: #333;
+      color: #fff;
+      border: 2px solid #444;
+      border-radius: 5px;
+      padding: 5px;
+      width: 100%;
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+    
+    button:hover::after { opacity: 1; }
+    .log div.damage { color: #ff4c4c; font-weight: bold; }
+    .log div.lesson { color: #3fcf3f; font-style: italic; }
+    .log div.question { color: #3399ff; font-weight: bold; }
+    .log div.system { color: #888; font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Opis Zasad Gry</h2>
+    <div class="content">
+      <p>Gra edukacyjna oparta na zasadach programowania obiektowego (OOP):</p>
+      <ul>
+        <li><strong>Enkapsulacja</strong>: Dane i funkcje ukryte w klasach Pokémon.</li>
+        <li><strong>Dziedziczenie</strong>: Możliwość tworzenia nowych klas Pokémon na bazie ogólnej klasy.</li>
+        <li><strong>Polimorfizm</strong>: Ruchy i ataki mogą działać różnie w zależności od kontekstu.</li>
+        <li><strong>Abstrakcja</strong>: Użytkownik nie musi znać szczegółów implementacji.</li>
+      </ul>
+    </div>
+
+    <h2>Opis Sterowania</h2>
+    <div class="content">
+      <p>Gracz kontroluje Pikachu, wybierając ataki za pomocą przycisków na ekranie.</p>
+      <ul>
+        <li>Kliknij nazwę ataku, aby go użyć.</li>
+        <li>Odpowiadaj na pytania quizowe, aby kontynuować starcia z trenerami.</li>
+        <li>Wszystko odbywa się automatycznie w rytmie walk Pokémon.</li>
+      </ul>
+    </div>
+
+    <h2>Źródła</h2>
+    <div class="content">
+      <ul>
+        <li>Sprites: <a href="https://github.com/PokeAPI/sprites" target="_blank">PokeAPI Sprites</a></li>
+        <li><a href="https://www.geeksforgeeks.org"></a></li>
+        <li><a href="https://www.w3schools.com"></a></li>
+      </ul>
+    </div>
+
+    <h2>Kontent Tematyczny</h2>
+    <div class="content">
+      <p>Gra zawiera:</p>
+      <ul>
+        <li>Postacie Pokémon (Pikachu, Bulbasaur, Charmander, itd.)</li>
+        <li>Ruchy/ataki o różnej sile (np. Thunderbolt, Tackle, Vine Whip)</li>
+        <li>System zdrowia i obrażeń</li>
+        <li>Element edukacyjny – definicje i quizy z OOP</li>
+      </ul>
+    </div>
+
+    <h2>Wybór Poziomu Trudności</h2>
+    <div class="content">
+      <p>Poziom trudności wzrasta automatycznie:</p>
+      <ul>
+        <li>Na początku walczysz z dzikimi Pokémonami.</li>
+        <li>Później pojawiają się pytania i trudniejsi trenerzy.</li>
+        <li>Nie ma ustawiania poziomu ręcznie – rozwój odbywa się w toku gry.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Pokémon OOP Battle</h1>
+    <div class="battlefield">
+      <div class="pokemon" id="enemyContainer">
+        <div class="nameplate" id="enemyNameplate"></div>
+        <img id="enemyImg" src="" alt="Enemy Pokémon">
+        <div class="health-bar"><div id="enemyHealth" class="health-fill"></div></div>
+      </div>
+      <div class="pokemon" id="playerContainer">
+        <div class="nameplate">Pikachu Lv. 5</div>
+        <img id="playerImg" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="Pikachu">
+        <div class="health-bar"><div id="playerHealth" class="health-fill"></div></div>
+      </div>
+    </div>
+    <div class="log" id="log"></div>
+    <div class="buttons" id="buttons"></div>
+  </div>
+  <script>
+    class Move {
+      constructor(name, damage) {
+        this.name = name;
+        this.damage = damage;
+      }
+    }
+  
+    class Pokemon {
+      constructor(name, health, moves, image) {
+        this.name = name;
+        this.health = this.maxHealth = health;
+        this.moves = moves;
+        this.image = image;
+      }
+  
+      useMove(index, target) {
+        const move = this.moves[index];
+        if (Math.random() < 0.1) return `${this.name}'s ${move.name} missed!`;
+        let crit = Math.random() < 0.1;
+        let variation = 0.9 + Math.random() * 0.2;
+        let actualDamage = Math.floor(move.damage * variation * (crit ? 2 : 1));
+        target.health = Math.max(0, target.health - actualDamage);
+        return `${this.name} used ${move.name}${crit ? ' (Critical Hit!)' : ''} on ${target.name} for ${actualDamage} damage!`;
+      }
+  
+      getHealthPercent() {
+        return (this.health / this.maxHealth) * 100;
+      }
+    }
+  
+    const definitions = [
+      "Encapsulation: bundling data and methods that work on that data.",
+      "Inheritance: allows a class to use properties and methods of another class.",
+      "Polymorphism: using a shared interface, methods behave differently.",
+      "Abstraction: hiding complex implementation details and showing only what's necessary.",
+      "Composition: building complex types by combining simpler objects.",
+      "Interface: defines a contract for what a class can do, without saying how it does it.",
+      "Constructor: a special method used to initialize objects.",
+      "Method Overriding: a subclass provides its own version of a method.",
+      "Static Method: method that belongs to a class, not instances.",
+      "Dependency Injection: supplying a class with its dependencies from the outside."
+    ];
+  
+    const questions = [
+      { q: "Does encapsulation bundle data with code? (yes/no)", a: "yes" },
+      { q: "Can a subclass inherit methods from a superclass? (yes/no)", a: "yes" },
+      { q: "Is polymorphism related to method overriding? (yes/no)", a: "yes" },
+      { q: "Does abstraction expose all internal logic? (yes/no)", a: "no" },
+      { q: "Is composition about combining simple objects into complex ones? (yes/no)", a: "yes" },
+      { q: "Does an interface specify how a method works? (yes/no)", a: "no" },
+      { q: "Does a constructor initialize new objects? (yes/no)", a: "yes" },
+      { q: "Can method overriding happen in subclasses? (yes/no)", a: "yes" },
+      { q: "Do static methods belong to instances? (yes/no)", a: "no" },
+      { q: "Is dependency injection about providing objects from outside? (yes/no)", a: "yes" }
+    ];
+  
+    const wildPokemons = [
+      new Pokemon("Bulbasaur", 50, [new Move("Tackle", 10), new Move("Vine Whip", 12)], "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"),
+      new Pokemon("Charmander", 50, [new Move("Scratch", 10), new Move("Ember", 12)], "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png"),
+      new Pokemon("Squirtle", 50, [new Move("Tackle", 10), new Move("Water Gun", 12)], "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png"),
+      new Pokemon("Oddish", 50, [new Move("Absorb", 10), new Move("Acid", 12)], "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/43.png"),
+      new Pokemon("Pidgey", 45, [new Move("Gust", 10), new Move("Quick Attack", 12)], "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/16.png"),
+      new Pokemon("Rattata", 48, [new Move("Tackle", 10), new Move("Bite", 12)], "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/19.png"),
+    ];
+  
+    const trainerPokemons = [
+      new Pokemon("Eevee", 55, [new Move("Quick Attack", 10), new Move("Bite", 12)], "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png"),
+      new Pokemon("Meowth", 50, [new Move("Scratch", 10), new Move("Fury Swipes", 14)], "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/52.png"),
+      new Pokemon("Jigglypuff", 55, [new Move("Pound", 10), new Move("Sing", 0)], "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/39.png"),
+    ];
+  
+    const game = {
+      player: new Pokemon("Pikachu", 60, [new Move("Tackle", 10), new Move("Thunderbolt", 20)], "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"),
+      wildIndex: 0,
+      trainerIndex: 0,
+      trainerQuestionIndex: 0,
+      definitionIndex: 0,
+  
+      log(msg, type = "system") {
+        const logBox = document.getElementById("log");
+        const div = document.createElement("div");
+        div.className = type;
+        div.textContent = msg;
+        logBox.appendChild(div);
+        logBox.scrollTop = logBox.scrollHeight;
+      },
+  
+      updateScene() {
+        const enemy = this.enemy;
+        document.getElementById("enemyImg").src = enemy.image;
+        document.getElementById("playerImg").src = this.player.image;
+        document.getElementById("enemyNameplate").textContent = `${enemy.name} Lv. 5`;
+        document.getElementById("playerHealth").style.width = `${this.player.getHealthPercent()}%`;
+        document.getElementById("enemyHealth").style.width = `${enemy.getHealthPercent()}%`;
+        this.renderButtons();
+      },
+  
+      renderButtons() {
+        const buttons = document.getElementById("buttons");
+        buttons.innerHTML = "";
+        this.player.moves.forEach((move, index) => {
+          const btn = document.createElement("button");
+          btn.textContent = move.name;
+          btn.setAttribute("data-tooltip", `${move.damage} base damage`);
+          btn.onclick = () => this.playerAttack(index);
+          buttons.appendChild(btn);
+        });
+      },
+  
+      nextWildBattle() {
+        if (this.wildIndex < wildPokemons.length) {
+          this.enemy = wildPokemons[this.wildIndex];
+          this.player.health = this.player.maxHealth;
+          this.enemy.health = this.enemy.maxHealth;
+          this.state = "wild";
+          this.updateScene();
+          this.log(`A wild ${this.enemy.name} appeared!`);
+        } else {
+          this.trainerIndex = 0;
+          this.nextTrainerQuestion();
+        }
+      },
+  
+      nextTrainerQuestion() {
+        if (this.trainerQuestionIndex < questions.length) {
+          const q = questions[this.trainerQuestionIndex];
+          const answer = prompt(q.q);
+          if (answer?.toLowerCase() === q.a) {
+            this.log("Correct answer!", "question");
+          } else {
+            this.log("Oops! Not quite right.", "question");
+          }
+          this.nextTrainerBattle();
+        } else {
+          this.log("You defeated all trainer Pokémon! Great job!");
+        }
+      },
+  
+      nextTrainerBattle() {
+        if (this.trainerIndex < 3) {
+          this.enemy = trainerPokemons[this.trainerIndex % trainerPokemons.length];
+          this.player.health = this.player.maxHealth;
+          this.enemy.health = this.enemy.maxHealth;
+          this.state = "trainer";
+          this.updateScene();
+          this.log(`Trainer sends out ${this.enemy.name} Lv. 5!`);
+        } else {
+          this.wildIndex += 3;
+          this.trainerIndex = 0;
+          this.trainerQuestionIndex++;
+          this.nextWildBattle();
+        }
+      },
+  
+      playerAttack(index) {
+        this.log(this.player.useMove(index, this.enemy), "damage");
+        this.updateScene();
+        if (this.enemy.health <= 0) {
+          this.log(`${this.enemy.name} fainted!`);
+  
+          if (this.state === "wild") {
+            if (this.definitionIndex < definitions.length) {
+              this.log(`You defeated the wild Pokémon! Here's a lesson: ${definitions[this.definitionIndex++]}`, "lesson");
+            }
+            this.wildIndex++;
+            setTimeout(() => this.nextWildBattle(), 3000);
+          } else if (this.state === "trainer") {
+            this.trainerIndex++;
+            this.trainerQuestionIndex++;
+            setTimeout(() => this.nextTrainerQuestion(), 3000);
+          }
+        } else {
+          setTimeout(() => this.enemyAttack(), 1000);
+        }
+      },
+  
+      enemyAttack() {
+        const i = Math.floor(Math.random() * this.enemy.moves.length);
+        this.log(this.enemy.useMove(i, this.player), "damage");
+        this.updateScene();
+        if (this.player.health <= 0) {
+          this.log("Pikachu fainted! Game over.", "damage");
+          document.getElementById("buttons").innerHTML = "";
+        }
+      },
+  
+      start() {
+        this.nextWildBattle();
+      }
+    };
+  
+    game.start();
+  </script>
+  
+</body>
+</html>
