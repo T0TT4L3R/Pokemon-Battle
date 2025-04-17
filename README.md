@@ -1,14 +1,5 @@
-# Pokémon OOP Battle - Gra edukacyjna
-Pokémon OOP Battle to gra edukacyjna, której celem jest nauka podstaw programowania obiektowego (OOP) w języku JavaScript, z wykorzystaniem elementów z gier Pokémon. Gra opiera się na zasadach takich jak enkapsulacja, dziedziczenie, polimorfizm i abstrakcja, a gracz wciela się w rolę trenera Pokémon, walcząc z dzikimi Pokémonami oraz trenerami.
-
-*Zawartość*
-Enkapsulacja: Pokémony i ich ruchy są reprezentowane jako obiekty.
-
-Dziedziczenie: Nowe klasy Pokémon dziedziczą cechy i metody po klasach bazowych.
-
-Polimorfizm: Ataki działają różnie w zależności od kontekstu.
-
-Abstrakcja: Gracz nie musi znać szczegółów implementacji, aby grać.
+# Pokémon Battle - Gra edukacyjna
+Pokémon Battle to gra edukacyjna, której celem jest nauka podstaw programowania obiektowego (OOP) w języku JavaScript, z wykorzystaniem elementów z gier Pokémon. Gra opiera się na zasadach takich jak enkapsulacja, dziedziczenie, polimorfizm i abstrakcja, a gracz wciela się w rolę trenera Pokémon, walcząc z dzikimi Pokémonami oraz trenerami.
 
 *Wymagania systemowe*
 Aby uruchomić tę grę, wystarczy nowoczesna przeglądarka internetowa i dostęp do internetu (dla ładowania obrazków Pokémon).
